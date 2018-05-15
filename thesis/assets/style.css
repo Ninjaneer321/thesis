@@ -36,21 +36,22 @@ body {
     padding-top: 40px;
     padding-bottom: 30px;
 }
+
 img{
     width: 100%;
     height: auto;
 }
 .smalllegend_k12,.smalllegend_github{
     font-family: 'IBM Plex Serif';
-    font-size: 14px;
-    line-height: 24px;
+    font-size: 16px;
+    line-height: 30px;
     color: #f9a260;
 }
 .smalllegend_k12{
     color: #f9a260;
 }
 .smalllegend_github{
-    color: #f9a260;
+    color: #6eccde;
 }
 
 /*__________________________________________viz attributes here*/
@@ -186,50 +187,68 @@ img{
     padding-top: 15px;
 }
 /*__________________________________________header attributes here*/
+.bigt{
+    width: 100%;
+    height: 100vh;
+    /*background-image: url(assets/vs.png);*/
+  /*  background: url(images/bg.jpg) no-repeat center center fixed; */
+  /*-webkit-background-size: cover;*/
+  /*-moz-background-size: cover;*/
+  /*-o-background-size: cover;*/
+  /*background-size: cover;*/
+    
+    
+    
+}
 .hed{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-content: center;
     align-items: center;
-    margin-top: 50px;
+    /*margin-top: 50px;*/
+    height: 80vh;
 }
 .hedparts{
     padding: 10px;
     font-family: 'IBM Plex Serif';
     text-align: center;
-    font-size: 32px;
-    line-height: 30px;
+    font-size: 48px;
+    line-height: 40px;
     font-weight: 200;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: black
 }
 .bigtitleopener{
+    align-self: center;
+    height: 20vh;
+    background-color: black;
     font-family: 'Open Sans';
     text-align: center;
-    font-size: 15px;
-    line-height: 22px;
+    font-size: 18px;
+    line-height: 30px;
     text-transform: uppercase;
-    letter-spacing: 0.2px;    
-    font-weight: bold;
-    color: black;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-top: 20px;
-    margin-bottom: 50px;
-    border-top: 1px solid lightgrey;
-    border-bottom: 1px solid lightgrey;
+    letter-spacing: 2px;    
+    /*font-weight: bold;*/
+    color: white;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    /*margin-top: 20px;*/
+    /*margin-bottom: 50px;*/
+    /*border-top: 1px solid lightgrey;*/
+    /*border-bottom: 1px solid lightgrey;*/
 }
 #vs{
     padding: 10px;
     font-family: 'IBM Plex Serif';
     text-align: center;
-    font-size: 96px;
+    font-size: 120px;
     line-height: 80px;
     font-weight: 700;
     text-transform: uppercase;
-    color: black
+    color: black;
+    /*opacity: 0;*/
 }
 
 
