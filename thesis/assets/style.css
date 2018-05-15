@@ -36,7 +36,22 @@ body {
     padding-top: 40px;
     padding-bottom: 30px;
 }
-
+img{
+    width: 100%;
+    height: auto;
+}
+.smalllegend_k12,.smalllegend_github{
+    font-family: 'IBM Plex Serif';
+    font-size: 14px;
+    line-height: 24px;
+    color: #f9a260;
+}
+.smalllegend_k12{
+    color: #f9a260;
+}
+.smalllegend_github{
+    color: #f9a260;
+}
 
 /*__________________________________________viz attributes here*/
 #viz1,#viz3{
@@ -62,14 +77,14 @@ body {
 #viz1,#viz2,#viz3,#viz4 {
     display: flex; 
     width: 50%;
-    height: auto;
+    height: 80vh;
     overflow: auto;
     box-sizing: border-box;
-    padding: 3%;
+    padding: 5%;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap-reverse;
-    align-content: flex-start;
+    align-content: center;
     /*justify-content: flex-start;*/
 }
 .words {

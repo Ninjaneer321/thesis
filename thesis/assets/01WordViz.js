@@ -59,9 +59,9 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side) {
             .style('color', function(d){})
             .style('font-size', function(d) { return d.frequency * coef + 'px' })
             .style('line-height', function(d) {
-                if (d.frequency <=  0.004) {return d.frequency * 2 * coef + 'px'}
-                else if (0.01 <= d.frequency <=  0.004) {return d.frequency * 1.5 * coef + 'px'}
-                else {return d.frequency * coef + 'px'}
+                if (d.frequency <=  0.004) {return d.frequency * 3 * coef + 'px'}
+                else if (0.01 <= d.frequency <=  0.004) {return d.frequency * 2 * coef + 'px'}
+                else {return d.frequency * 1 * coef + 'px'}
             })
             .style('padding-right', function(d) {
                 if (d.frequency <=  0.004) {return d.frequency * 1.5 * coef + 'px'}
@@ -345,5 +345,5 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side) {
 }
 }
 
-DataDictionary('data/cs2.json', rawdata, dictionary1, wordCount, '#viz1', 'flex-start');
-DataDictionary('data/completeForks.json', rawdata2, dictionary2, wordCount2, '#viz2', 'flex-end');
+DataDictionary('data/cs2.json', rawdata, dictionary1, wordCount, '#viz1', 'center');
+DataDictionary('data/completeForks.json', rawdata2, dictionary2, wordCount2, '#viz2', 'center');
