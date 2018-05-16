@@ -2,11 +2,12 @@ var request = require('request');
 var async = require('async');
 var cheerio = require('cheerio');
 var fs = require('fs');
+var _ = require('underscore');
 
 var collection = [ ];
 var collection2 = [ ];
 
-var obj = JSON.parse(fs.readFileSync('SeparatePages/completeForks.json', 'utf8'));
+var obj = JSON.parse(fs.readFileSync('03_data/01_finaldata/SeparatePages/completeStars.json', 'utf8'));
 
 function isWhiteSpace(char) {
   return " \t\n".includes(char);
@@ -18,9 +19,10 @@ function isPunct(char) {
 
 function compress(string) {
     return string
+      .replace(/[[:punct:]]$/,'')
       .split(" ")
       .filter(char => !isWhiteSpace(char) && !isPunct(char))
-      .join(", ");
+      // .join(" ");
 };
 
 
@@ -29,55 +31,53 @@ async.eachSeries(obj, function(value, callback) {
         Dict.Name = value.name;
         var topics = JSON.stringify(value.topics);
         var realTopics = JSON.parse(topics);
-        Dict.Topics = realTopics;
-        collection.push(Dict);
+        console.log(realTopics);
+        realTopics.forEach(function(element){
+            
+        collection.push(element);
+        });
+        
+        // Dict.Topics = realTopics;
+        
     
     setTimeout(callback, 10);
     }, function() {
-            // console.log(collection);
-            
-                    
-                collection.forEach(function(element){
-                    execute(element.Topics, CB2);
-                });
-
-
-});
-
-function execute(element, callback){
-    
-    async.eachSeries(JSON.stringify(element), function(value2, callback2) {
-        console.log(JSON.stringify(element));
+        // console.log(collection);
+        var unique = _.uniq(collection);
+        
+        var sorted = unique.sort();
+        
+        
+        async.eachSeries(sorted, function(value2, callback2) {
         console.log(value2 + ' here');
         var completed = new Object;
         completed.Name = value2;
-        completed.descript = new Array();
         
         var url3 = 'http://github.com/topics/' + value2;
         request(url3, function(error, response, body) {
             if (!error && response.statusCode == 200) {
-            // console.log(url3);
+            console.log(url3);
             // load `content` into a cheerio object
             var $ = cheerio.load(body);
             var desc = $('.mb-3').find('p').text();
             var values = desc;
-            completed.descript.push(compress(values));
+            console.log(values);
+            var newvalues = compress(values);
+            console.log(newvalues);
+            // completed.topics.push(compress(values));
+            completed.topics = newvalues;
+            collection2.push(completed);
             }
+            console.log(completed);
         });
-        console.log(completed);
-        collection2.push(completed);
-        setTimeout(callback2, 5000);
+        setTimeout(callback2, 250);
         
         }, function(){
-            console.log('hold on...');
+            fs.writeFileSync('dictdesc.json', JSON.stringify(collection2));
     });
-    
-    callback();
 
-}
+        console.log(sorted);
 
-function CB2(){
-    console.log('done scraping!');
-    fs.writeFileSync(('SeparatePages/dict.json'), JSON.stringify(collection2));
-}
+
+});
 
