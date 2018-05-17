@@ -7,7 +7,7 @@ var _ = require('underscore');
 var collection = [ ];
 var collection2 = [ ];
 
-var obj = JSON.parse(fs.readFileSync('03_data/01_finaldata/SeparatePages/completeStars.json', 'utf8'));
+var obj = JSON.parse(fs.readFileSync('SeparatePages/completeStars2.json', 'utf8'));
 
 function isWhiteSpace(char) {
   return " \t\n".includes(char);
@@ -73,7 +73,7 @@ async.eachSeries(obj, function(value, callback) {
         setTimeout(callback2, 250);
         
         }, function(){
-            fs.writeFileSync('dictdesc.json', JSON.stringify(collection2));
+            fs.writeFileSync('SeparatePages/topicsDescStars.json', JSON.stringify(collection2));
     });
 
         console.log(sorted);

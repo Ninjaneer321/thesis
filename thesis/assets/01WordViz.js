@@ -37,29 +37,26 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
     
     d3.json(selectdata, function(error, data) {
         if (error) throw error;
+        //size of words defined here!
         var coef = 1000;
 
         selectarray.push(data);
-        
-        // if (selectdata == 'data/cs2.json') {analyze2(selectarray)}
-        // else {analyze(selectarray)}
         analyze(selectarray);
-        console.log(dict);
-        
+
         var rangef = _.pluck(dict, 'frequency');
-        
+
         var q2 = d3.quantile(rangef, 0.25);
         var q3 = d3.quantile(rangef, 0.5);
         var q4 = d3.quantile(rangef, 0.75);
-        
+
         var cutoff = q2;
-        
+
         // var meanF = d3.mean(rangef);
         // var std = d3.deviation(rangef);
-        
+
         console.log(q2 + ' and ' + q3 + ' and ' + q4);
 
-        var wordDiv= d3.select(selectdiv)
+        var wordID = d3.select(selectdiv)
             .attr('class', 'box')
             .selectAll('div')
             // .data(dict)
@@ -67,10 +64,40 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
             .enter()
             .append('div')
             .attr('class', 'words')
-            .attr('id', function(d) { return d.word + group})
-            // .text(function (d) {return d.word + ' '})
+            .attr('id', function(d) { return '_' + group + d.word})
+            ;
+
+        var wordDiv = wordID
             .text(function(d) { return d.word })
-            .style('color', function(d){})
+            // .style('color', function(d){
+                
+                
+            //     var originalId = (this.id).replace('_' + group, "");
+            //     var firstCheck;
+            //     var secondCheck;
+            //     if (dict == dictionary1 || dict == dictionary2) {
+            //         firstCheck = _.findWhere(dictionary1, {word: originalId});
+            //         secondCheck = _.findWhere(dictionary2, {word: originalId});
+            //     } else {
+            //         firstCheck = _.findWhere(dictionary3, {word: originalId});
+            //         secondCheck = _.findWhere(dictionary4, {word: originalId});
+            //     }
+        
+            //     var thirdCheck = [firstCheck, secondCheck];
+                
+            //     if (thirdCheck[0] != undefined && thirdCheck[1] != undefined){
+            //         d3.selectAll(this.id).style('fill', 'white');
+            //         return 'white';
+            //     } else if (thirdCheck[0] === undefined && thirdCheck[1] != undefined){
+            //         d3.selectAll(this.id).style('fill', 'red');
+            //         return 'red';
+            //     } else if (thirdCheck[0] !== undefined && thirdCheck[1] === undefined){
+            //         d3.selectAll(this.id).style('fill', 'red');
+            //         return 'red';
+            //     }
+                
+            // })
+            .style('color', 'white')
             .style('font-size', function(d) { return d.frequency * coef + 'px' })
             .style('line-height', function(d) {
                 if (d.frequency <=  0.004) {return d.frequency * 3 * coef + 'px'}
@@ -84,21 +111,23 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
             })
             .on('mouseover', handleMouseOver)
             .on('mouseout', handleMouseOut)
-            // .on('click', handleClick)
             ;
-            
+
             wordDiv
-            .exit().remove();
-            
+            .exit().remove()
+            ;
+
             wordDiv
-            .enter().merge(wordDiv);
-            
+            .enter()
+            .merge(wordDiv)
+            ;
+
     });
 
     function handleMouseOver(d, i) {
 
             var rangef = _.pluck(dict, 'frequency');
-            console.log(d);
+            // console.log(d);
             var q2 = d3.quantile(rangef, 0.25);
             var q3 = d3.quantile(rangef, 0.5);
             var q4 = d3.quantile(rangef, 0.75);
@@ -107,11 +136,10 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
 
             var ourdiv = d3.selectAll('#' + this.id);
             var simplediv = d3.select(this);
-            console.log(ourdiv);
+            // console.log(ourdiv);
             
-            
-            var originalId = (this.id).replace(group, "");
-            console.log(originalId);
+            var originalId = (this.id).replace('_' + group, "");
+            // console.log(originalId);
             
             var firstCheck;
             var secondCheck;
@@ -201,7 +229,7 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
         $(".toremove").remove();
         
         var baseDiv = d3.select('#base' + group);
-        console.log(baseDiv);
+        // console.log(baseDiv);
         var left = baseDiv.selectAll('.lefttxt');
         var center = baseDiv.selectAll('.centertxt');
         var right = baseDiv.selectAll('.righttxt');
@@ -306,7 +334,7 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
         ourdiv
         .transition()
         .style('opacity', '0.4')
-        .style('color', 'white')
+        // .style('color', 'white')
         .style('transform', 'scale(1)')
         ;
 
@@ -332,33 +360,19 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
         
         var BagWords = [];
         data.forEach(function(data) {
-            // console.log(data);
             for (var i = 0; i < data.length; i++) {
                 var desc = data[i].topics;
-                // for (var j=0; j<desc.length; j++){
-                //     var desc2 = desc[j];
-                // }
-                // console.log(desc);
                 desc.forEach(function(dt){
-                    // console.log(dt);
-                    // for (var j=0; j<dt.length; j++){
-                    //     var individualTopic = dt[j];
-                    // }
-                // console.log(dt);
                 BagWords.push(dt);
                 });
-                // BagWords.push(desc2);
             }
         var longString = BagWords.join(' ');
         // console.log(longString);
         var phrases = longString.replace(/(\ba\b|\bable\b|\babout\b|\bacross\b|\bafter\b|\bal\b|\ball\b|\balmost\b|\balso\b|\bam\b|\bamong\b|\ban\b|\band\b|\bany\b|\bare\b|\bas\b|\bat\b|\bbe\b|\bbecause\b|\bbeen\b|\bbut\b|\bby\b|\bcan\b|\bcannot\b|\bcould\b|\bdear\b|\bdid\b|\bdo\b|\bdoes\b|\beither\b|\belse\b|\bever\b|\bevery\b|\bet\b|\bfor\b|\bfrom\b|\bget\b|\bgot\b|\bhad\b|\bhas\b|\bhave\b|\bhe\b|\bher\b|\bhers\b|\bhim\b|\bhis\b|\bhow\b|\bhowever\b|\bi\b|\bif\b|\bin\b|\binto\b|\bis\b|\bit\b|\bits\b|\bjust\b|\bleast\b|\blet\b|\blike\b|\blikely\b|\bmay\b|\bme\b|\bmight\b|\bmost\b|\bmust\b|\bmy\b|\bneither\b|\bno\b|\bnor\b|\bnot\b|\bof\b|\boff\b|\boften\b|\bon\b|\bonly\b|\bor\b|\bother\b|\bour\b|\bown\b|\bper\b|\brather\b|\bsaid\b|\bsay\b|\bsays\b|\bshe\b|\bshould\b|\bsince\b|\bso\b|\bsome\b|\bthan\b|\bthat\b|\bthe\b|\btheir\b|\bthem\b|\bthen\b|\bthere\b|\bthese\b|\bthey\b|\bthis\b|\btis\b|\bto\b|\btoo\b|\btwas\b|\bus\b|\bwants\b|\bwas\b|\bwe\b|\bwere\b|\bwhat\b|\bwhen\b|\bwhere\b|\bwhich\b|\bwhile\b|\bwho\b|\bwhom\b|\bwhy\b|\bwill\b|\bwith\b|\bwould\b|\byet\b|\byou\b|\byour\b|\bain’t\b|\baren’t\b|\bcan’t\b|\bcould’ve\b|\bcouldn’t\b|\bdidn’t\b|\bdoesn’t\b|\bdon’t\b|\bhasn’t\b|\bhe’d\b|\bhe’ll\b|\bhe’s\b|\bhow’d\b|\bhow’ll\b|\bhow’s\b|\bi’d\b|\bi’ll\b|\bi’m\b|\bi’ve\b|\bisn’t\b|\bit’s\b|\bmight’ve\b|\bmightn’t\b|\bmust’ve\b|\bmustn’t\b|\bshan’t\b|\bshe’d\b|\bshe’ll\b|\bshe’s\b|\bshould’ve\b|\bshouldn’t\b|\bthat’ll\b|\bthat’s\b|\bthere’s\b|\bthey’d\b|\bthey’ll\b|\bthey’re\b|\bthey’ve\b|\bwasn’t\b|\bwe’d\b|\bwe’ll\b|\bwe’re\b|\bweren’t\b|\bwhat’d\b|\bwhat’s\b|\bwhen’d\b|\bwhen’ll\b|\bwhen’s\b|\bwhere’d\b|\bwhere’ll\b|\bwhere’s\b|\bwho’d\b|\bwho’ll\b|\bwho’s\b|\bwhy’d\b|\bwhy’ll\b|\bwhy’s\b|\bwon’t\b|\bwould’ve\b|\bwouldn’t\b|\byou’d\b|\byou’ll\b|\byou’re\b|\byou’ve\b)/gi, '').replace(/[^\w\s]/gi, ''); // The caret (^) character is the negation of the set [...], gi is global and case-insensitive and the safelist in this example is digits, word characters (\w), and whitespace (\s).
         // console.log(phrases);
         var lc = phrases.toLowerCase();
-        // console.log(lc);
         var words = lc.split(' ');
-        // console.log(words);
         
-        // dict = [];
         words.forEach(function(word) {
             wc = dict.filter(function(element) {
                 return element.word == word;
@@ -375,16 +389,15 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
                 return word.frequency = word.count / (dict.length);
                 });
             dict.shift();
-            console.log(dict);
-            // console.log(dict[0].frequency);
+            // console.log(dict);
             
         });
     }
-
+    
 }
 
 DataDictionary('data/cs2.json', rawdata, dictionary1, wordCount, '#viz1', 'center', 1);
-DataDictionary('data/completeForks.json', rawdata2, dictionary2, wordCount2, '#viz2', 'center', 1);
+DataDictionary('data/completeForks2.json', rawdata2, dictionary2, wordCount2, '#viz2', 'center', 1);
 
 DataDictionary('data/cs2.json', rawdata3, dictionary3, wordCount3, '#viz3', 'center', 2);
-DataDictionary('data/dictdescForks.json', rawdata4, dictionary4, wordCount4, '#viz4', 'center', 2);
+DataDictionary('data/topicsDescForks.json', rawdata4, dictionary4, wordCount4, '#viz4', 'center', 2);
