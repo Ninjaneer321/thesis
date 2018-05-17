@@ -27,11 +27,14 @@ async.eachSeries(indPaginas, function(value, callback) {
     arrayItems.forEach(function(element) {
 
       var individualRepo = new Object;
+      individualRepo.cat = 'repository';
+      individualRepo.type = 'starred';
       individualRepo.name = element.name;
       individualRepo.url = element.html_url;
       individualRepo.stars = element.stargazers_count;
       individualRepo.forks = element.forks_count;
       individualRepo.topics = element.topics;
+      individualRepo.gitTopics = element.topics;
       individualRepo.description = element.description;
       
       repoCollection.push(individualRepo);

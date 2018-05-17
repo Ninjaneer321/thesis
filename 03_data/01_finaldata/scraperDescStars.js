@@ -28,7 +28,8 @@ function compress(string) {
 
 async.eachSeries(obj, function(value, callback) {
         var Dict = new Object;
-        Dict.Name = value.name;
+        Dict.name = value.name;
+
         var topics = JSON.stringify(value.topics);
         var realTopics = JSON.parse(topics);
         console.log(realTopics);
@@ -51,7 +52,9 @@ async.eachSeries(obj, function(value, callback) {
         async.eachSeries(sorted, function(value2, callback2) {
         console.log(value2 + ' here');
         var completed = new Object;
-        completed.Name = value2;
+        completed.name = value2;
+        completed.cat = 'git_topic';
+        completed.type = 'starred';
         
         var url3 = 'http://github.com/topics/' + value2;
         request(url3, function(error, response, body) {

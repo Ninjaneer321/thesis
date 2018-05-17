@@ -2,32 +2,106 @@ var rawdata = [];
 var rawdata2 = [];
 var rawdata3 = [];
 var rawdata4 = [];
-var rawdata5 = [];
+
 var dictionary1 = [];
 var dictionary2 = [];
 var dictionary3 = [];
 var dictionary4 = [];
-var dictionary5 = [];
+
 var wordCount;
 var wordCount2;
 var wordCount3;
 var wordCount4;
-var wordCount5;
+
+var firstCheck;
+var secondCheck;
+var thirdCheck;
+
 
 d3.select('.btnholder')
   .insert('button')
   .attr('type','button')
   .attr('class','btn-btn')
-  .text('change status')
+  .text('Top 500 forked projects')
   .on('click', function(){
+      
+    var str = document.URL; 
+    var res = str.substr(-6);
+    console.log(res);
+      
+      if (res == '1.html') {
+          
       document.getElementById('viz2').innerHTML = "";
-      var dictionary1 = [];
-      var dictionary2 = [];
-      var rawdata = [];
-      var rawdata2 = [];
-      var wordCount = 0;
-      var wordCount2 = 0;
-      DataDictionary('data/completeStars.json', rawdata2, dictionary2, wordCount2, '#viz2', 'center', 1);
+      
+        firstCheck = undefined;
+        secondCheck = undefined;
+        thirdCheck = undefined;
+        
+        dictionary2 = [];
+        rawdata2 = [];
+        wordCount2 = 0;
+        
+        DataDictionary('data/completeForks2.json', rawdata2, dictionary2, wordCount2, '#viz2', 'center', 1);
+      
+      } else if (res == '2.html') {
+          
+      document.getElementById('viz4').innerHTML = "";
+          
+        firstCheck = undefined;
+        secondCheck = undefined;
+        thirdCheck = undefined;
+        
+        dictionary4 = [];
+        rawdata4 = [];
+        wordCount4 = 0;
+        
+        DataDictionary('data/topicsDescForks.json', rawdata4, dictionary4, wordCount4, '#viz4', 'center', 2);
+          
+      }
+      
+  })
+;
+
+d3.select('.btnholder')
+  .insert('button')
+  .attr('type','button')
+  .attr('class','btn-btn')
+  .text('Top 500 starred projects')
+  .on('click', function(){
+      
+    var str = document.URL; 
+    var res = str.substr(-6);
+    console.log(res);
+      if (res == '1.html') {
+          
+      document.getElementById('viz2').innerHTML = "";
+      
+        firstCheck = undefined;
+        secondCheck = undefined;
+        thirdCheck = undefined;
+        
+        dictionary2 = [];
+        rawdata2 = [];
+        wordCount2 = 0;
+        
+        DataDictionary('data/completeStars2.json', rawdata2, dictionary2, wordCount2, '#viz2', 'center', 1);
+      
+      } else if (res == '2.html') {
+          
+      document.getElementById('viz4').innerHTML = "";
+          
+        firstCheck = undefined;
+        secondCheck = undefined;
+        thirdCheck = undefined;
+        
+        dictionary4 = [];
+        rawdata4 = [];
+        wordCount4 = 0;
+        
+        DataDictionary('data/topicsDescStars.json', rawdata4, dictionary4, wordCount4, '#viz4', 'center', 2);
+          
+      }
+      
   })
 ;
   
@@ -38,7 +112,7 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
     d3.json(selectdata, function(error, data) {
         if (error) throw error;
         //size of words defined here!
-        var coef = 1000;
+        var coef = 850;
 
         selectarray.push(data);
         analyze(selectarray);
@@ -65,6 +139,8 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
             .append('div')
             .attr('class', 'words')
             .attr('id', function(d) { return '_' + group + d.word})
+            .on('mouseover', handleMouseOver)
+            .on('mouseout', handleMouseOut)
             ;
 
         var wordDiv = wordID
@@ -109,8 +185,6 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
                 else if (0.01 <= d.frequency <=  0.004) {return d.frequency * coef + 'px'}
                 else {return d.frequency * 0.5 *  coef + 'px'}
             })
-            .on('mouseover', handleMouseOver)
-            .on('mouseout', handleMouseOut)
             ;
 
             wordDiv
@@ -120,6 +194,8 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
             wordDiv
             .enter()
             .merge(wordDiv)
+            .on('mouseover', handleMouseOver)
+            .on('mouseout', handleMouseOut)
             ;
 
     });
@@ -141,19 +217,19 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
             var originalId = (this.id).replace('_' + group, "");
             // console.log(originalId);
             
-            var firstCheck;
-            var secondCheck;
+            // var firstCheck;
+            // var secondCheck;
             
             // console.log(this.id);
             if (dict == dictionary1 || dict == dictionary2) {
                 firstCheck = _.findWhere(dictionary1, {word: originalId});
                 secondCheck = _.findWhere(dictionary2, {word: originalId});
-            } else {
+            } else if (dict == dictionary3 || dict == dictionary4) {
                 firstCheck = _.findWhere(dictionary3, {word: originalId});
                 secondCheck = _.findWhere(dictionary4, {word: originalId});
             }
 
-            var thirdCheck = [firstCheck, secondCheck];
+            thirdCheck = [firstCheck, secondCheck];
 
             if (firstCheck === undefined) {
                 if (secondCheck === undefined || secondCheck.frequency < cutoff){
@@ -240,34 +316,34 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
             left.html('Frequency:<br><span class=\'bignumber1\'>'  + round(d.frequency*100, 1) + '%</span><br> on K12');
             center.html(d.word);
             right.html('Frequency:<br><span class=\'bignumber2\'>0%</span><br> on Github');
-            leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barBase').attr('width', '100%');;
-            leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barReg').attr('x', function(){return (100 - d.frequency*1000) + '%'}).attr('width', function(){return d.frequency*1000 + '%'});
-            rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barBase').attr('width', '100%');
-            // rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barReg').attr('width', function(){return d[1].frequency*1000 + '%'});
+            leftg.append('rect').attr('fill', '#ffa059').attr('class','barBase').attr('width', '100%');;
+            leftg.append('rect').attr('fill', '#ffa059').attr('class','barReg').attr('x', function(){return (100 - d.frequency*1000) + '%'}).attr('width', function(){return d.frequency*1000 + '%'});
+            rightg.append('rect').attr('fill', '#5ecee5').attr('class','barBase').attr('width', '100%');
+            // rightg.append('rect').attr('fill', '#5ecee5').attr('class','barReg').attr('width', function(){return d[1].frequency*1000 + '%'});
         } else if (n===2) {
             left.html('Frequency:<br><span class=\'bignumber1\'>' + round(d[0].frequency*100, 1) + '%</span><br> on K12');
             center.html(d[0].word);
             right.html('Frequency:<br><span class=\'bignumber2\'>'  + round(d[1].frequency*100, 1) + '%</span><br> on Github');
-            leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barBase').attr('width', '100%');;
-            leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barReg').attr('x', function(){return (100 - d[0].frequency*1000) + '%'}).attr('width', function(){return d[0].frequency*1000 + '%'});
-            rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barBase').attr('width', '100%');;
-            rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barReg').attr('width', function(){return d[1].frequency*1000 + '%'});
+            leftg.append('rect').attr('fill', '#ffa059').attr('class','barBase').attr('width', '100%');;
+            leftg.append('rect').attr('fill', '#ffa059').attr('class','barReg').attr('x', function(){return (100 - d[0].frequency*1000) + '%'}).attr('width', function(){return d[0].frequency*1000 + '%'});
+            rightg.append('rect').attr('fill', '#5ecee5').attr('class','barBase').attr('width', '100%');;
+            rightg.append('rect').attr('fill', '#5ecee5').attr('class','barReg').attr('width', function(){return d[1].frequency*1000 + '%'});
         } else if (n===3){
             left.html('Frequency:<br><span class=\'bignumber1\'>0%</span><br>on K12');
             center.html(d.word);
             right.html('Frequency:<br><span class=\'bignumber2\'>'  + round(d.frequency*100, 1) + '%</span><br> on Github');
-            leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barBase').attr('width', '100%');;
-            // leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barReg').attr('x', function(){return (100 - d[0].frequency*1000) + '%'}).attr('width', function(){return d[0].frequency*1000 + '%'});
-            rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barBase').attr('width', '100%');;
-            rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barReg').attr('width', function(){return d.frequency*1000 + '%'});
+            leftg.append('rect').attr('fill', '#ffa059').attr('class','barBase').attr('width', '100%');;
+            // leftg.append('rect').attr('fill', '#ffa059').attr('class','barReg').attr('x', function(){return (100 - d[0].frequency*1000) + '%'}).attr('width', function(){return d[0].frequency*1000 + '%'});
+            rightg.append('rect').attr('fill', '#5ecee5').attr('class','barBase').attr('width', '100%');;
+            rightg.append('rect').attr('fill', '#5ecee5').attr('class','barReg').attr('width', function(){return d.frequency*1000 + '%'});
         } else if (n===0) {
             left.html('Frequency:<br><span class=\'bignumber1\'>0%</span><br>on K12');
             center.html('- - -');
             right.html('Frequency:<br><span class=\'bignumber2\'>0%</span><br>on Github');
-            leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barBase').attr('width', '100%');;
-            // leftg.append('rect').attr('fill', 'rgb(249, 162, 96)').attr('class','barReg').attr('x', function(){return (100 - d[0].frequency*1000) + '%'}).attr('width', function(){return d[0].frequency*1000 + '%'});
-            rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barBase').attr('width', '100%');;
-            // rightg.append('rect').attr('fill', 'rgb(110, 204, 222)').attr('class','barReg').attr('width', function(){return d.frequency*1000 + '%'});
+            leftg.append('rect').attr('fill', '#ffa059').attr('class','barBase').attr('width', '100%');;
+            // leftg.append('rect').attr('fill', '#ffa059').attr('class','barReg').attr('x', function(){return (100 - d[0].frequency*1000) + '%'}).attr('width', function(){return d[0].frequency*1000 + '%'});
+            rightg.append('rect').attr('fill', '#5ecee5').attr('class','barBase').attr('width', '100%');;
+            // rightg.append('rect').attr('fill', '#5ecee5').attr('class','barReg').attr('width', function(){return d.frequency*1000 + '%'});
             
         }
 
