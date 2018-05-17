@@ -104,7 +104,7 @@ d3.select('.btnholder')
       
   })
 ;
-  
+
 function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, group) {
     
     var cutoff;
@@ -112,7 +112,13 @@ function DataDictionary(selectdata, selectarray, dict, wc, selectdiv, side, grou
     d3.json(selectdata, function(error, data) {
         if (error) throw error;
         //size of words defined here!
-        var coef = 850;
+        //and checking size of browser
+        console.log($(document).width());
+        var coef;
+        
+        if ($(document).width() > 1200) {coef = 1400}
+        else {coef = 850};
+        
 
         selectarray.push(data);
         analyze(selectarray);

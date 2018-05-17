@@ -8,6 +8,19 @@ body {
     margin: 0px;
     background-color: #ececec;
 }
+
+/*@media only screen and (min-width: 1200px) {*/
+/*    .vizcontainer{*/
+        /*max-width: 1200px;*/
+        /*height: 800px;*/
+/*    }*/
+/*    .words {*/
+/*        transform: scale(1.3);*/
+/*    }*/
+    
+/*}*/
+
+
 /*_________fernanda's style______________*/
 #presentation-header{
     width: 100%;
@@ -129,7 +142,7 @@ a:hover, a:active {
 .vizcontainer {
     display: flex;
     flex-direction: row;
-    align-self: stretch;
+    /*align-self: stretch;*/
     justify-content: center;
 }
 .intro_context {
